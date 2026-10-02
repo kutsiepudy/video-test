@@ -38,11 +38,9 @@ playPause.addEventListener("click", () => {
   videoPlaying = !videoPlaying;
   
   if (videoPlaying) {
-    console.log("Video playing");
     video.play();
     playPause.textContent = "❚❚";
   } else {
-    console.log("Video paused");
     video.pause();
     playPause.textContent = "▶︎";
   }
@@ -63,6 +61,7 @@ next.addEventListener("click", () => {
   }
   
   loadVideo(currentIndex);
+  video.play();
 });
 
 prev.addEventListener("click", () => {
@@ -73,6 +72,7 @@ prev.addEventListener("click", () => {
   }
   
   loadVideo(currentIndex)
+  video.play();
 });
 
 loadVideo(0)
