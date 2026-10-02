@@ -46,3 +46,31 @@ playPause.addEventListener("click", () => {
     playPause.textContent = "▶︎";
   }
 });
+
+function loadVideo(index) {
+  let episode = availableEpisodes[index]
+  video.src = `videos/${episode.file}`
+  video.load()
+}
+
+next.addEventListener("click", () => {
+  currentIndex++;
+  
+  if (currentIndex >= availableEpisodes.length) {
+    currentIndex = 0;
+  }
+  
+  loadVideo(currentIndex);
+});
+
+prev.addEventListener("click", () => {
+  currentIndex--;
+  
+  if (currentIndex < 0) {
+    currentIndex = availableEpisodes.length - 1;
+  }
+  
+  loadVideo(currentIndex)
+});
+
+loadVideo(0)
