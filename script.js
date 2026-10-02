@@ -37,11 +37,9 @@ playPause.addEventListener("click", () => {
   videoPlaying = !videoPlaying;
   
   if (videoPlaying) {
-    console.log("Video playing");
     video.play();
     playPause.textContent = "❚❚";
   } else {
-    console.log("Video paused");
     video.pause();
     playPause.textContent = "▶︎";
   }
