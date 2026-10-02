@@ -2,6 +2,7 @@ const video = document.getElementById("screen")
 const playPause = document.getElementById("play-pause");
 const next = document.getElementById("nextEP");
 const prev = document.getElementById("prevEP");
+const title = document.getElementById("epTitle");
 let videoPlaying = false;
 let currentIndex = 0;
 const availableEpisodes = [
@@ -37,9 +38,11 @@ playPause.addEventListener("click", () => {
   videoPlaying = !videoPlaying;
   
   if (videoPlaying) {
+    console.log("Video playing");
     video.play();
     playPause.textContent = "❚❚";
   } else {
+    console.log("Video paused");
     video.pause();
     playPause.textContent = "▶︎";
   }
@@ -49,6 +52,7 @@ function loadVideo(index) {
   let episode = availableEpisodes[index]
   video.src = `videos/${episode.file}`
   video.load()
+  title.textContent = episode.title
 }
 
 next.addEventListener("click", () => {
