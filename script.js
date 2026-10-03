@@ -5,8 +5,11 @@ const prev = document.getElementById("prevEP");
 const title = document.getElementById("epTitle");
 const fullscreenButton = document.getElementById("fullscreen");
 const seekSlide = document.getElementById("seek");
+const timeDisplay = document.getElementById("timeDisplay");
+
 let videoPlaying = false;
 let currentIndex = 0;
+
 const availableEpisodes = [
   {title: "Episode 01", file: "ep01.mp4"},
   {title: "Episode 02", file: "ep02.mp4"},
@@ -36,6 +39,29 @@ const availableEpisodes = [
   {title: "Episode 26", file: "ep26.mp4"},
 ];
 
+function formatTime(totalSeconds) {
+  if (!Number.isFinite(totalSeconds) || totalSeconds < 0) {
+    return "00:00";
+  }
+
+  const wholeSeconds = Math.floor(totalSeconds);
+  const hours = Math.floor(wholeSeconds / 3600);
+  const minutes = Math.floor((wholeSeconds % 3600) / 60);
+  const seconds = wholeSeconds % 60;
+
+  if (hours > 0) {
+    return `${hours}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+  }
+
+  return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+}
+
+function updateTimeDisplay() {
+  const currentTime = Number.isFinite(video.currentTime) ? video.currentTime : 0;
+  const duration = Number.isFinite(video.duration) && video.duration > 0 ? video.duration : 0;
+  timeDisplay.textContent = `${formatTime(currentTime)} / ${formatTime(duration)}`;
+}
+
 playPause.addEventListener("click", () => {
   if (video.paused) {
     video.play();
@@ -55,6 +81,7 @@ function loadVideo(index) {
   video.load();
   title.textContent = episode.title;
   seekSlide.value = 0;
+  updateTimeDisplay();
 }
 
 next.addEventListener("click", () => {
@@ -97,21 +124,38 @@ video.addEventListener("ended", () => {
 });
 
 fullscreenButton.addEventListener("click", () => {
-  video.requestFullscreen();
+  if (document.fullscreenElement) {
+    document.exitFullscreen();
+    return;
+  }
+
+  if (video.requestFullscreen) {
+    video.requestFullscreen();
+  }
 });
 
 video.addEventListener("loadedmetadata", () => {
   seekSlide.min = 0;
-  seekSlide.max = video.duration;
+  seekSlide.max = Number.isFinite(video.duration) ? video.duration : 0;
   seekSlide.value = 0;
+  updateTimeDisplay();
 });
 
 video.addEventListener("timeupdate", () => {
-  seekSlide.value = video.currentTime;
+  if (Number.isFinite(video.duration) && video.duration > 0) {
+    seekSlide.value = video.currentTime;
+  }
+  updateTimeDisplay();
 });
 
-seekSlide.addEventListener("change", () => {
-  video.currentTime = seekSlide.value;
+seekSlide.addEventListener("input", () => {
+  const newTime = Number(seekSlide.value);
+
+  if (Number.isFinite(newTime)) {
+    video.currentTime = newTime;
+  }
+
+  updateTimeDisplay();
 });
 
 loadVideo(0);
