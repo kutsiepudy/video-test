@@ -6,7 +6,7 @@ const title = document.getElementById("epTitle");
 const fullscreenButton = document.getElementById("fullscreen");
 const seekSlide = document.getElementById("seek");
 const timeDisplay = document.getElementById("timeDisplay");
-
+let isSeeking = false;
 let videoPlaying = false;
 let currentIndex = 0;
 
@@ -144,18 +144,22 @@ fullscreenButton.addEventListener("click", () => {
 
 video.addEventListener("loadedmetadata", () => {
   seekSlide.min = 0;
-  seekSlide.max = Number.isFinite(video.duration) ? video.duration : 0;
+  seekSlide.max = video.duration;
   seekSlide.value = 0;
 
   updateTimeDisplay();
 });
 
 video.addEventListener("timeupdate", () => {
-  if (Number.isFinite(video.duration) && video.duration > 0) {
+  if (!isSeeking) {
     seekSlide.value = video.currentTime;
   }
 
   updateTimeDisplay();
+});
+
+seekSlide.addEventListener("pointerdown", () => {
+  isSeeking = true;
 });
 
 seekSlide.addEventListener("input", () => {
@@ -166,6 +170,11 @@ seekSlide.addEventListener("input", () => {
   }
 
   updateTimeDisplay();
+});
+
+seekSlide.addEventListener("pointerup", () => {
+  isSeeking = false;
+  seekSlide.value = video.currentTime;
 });
 
 loadVideo(0);
