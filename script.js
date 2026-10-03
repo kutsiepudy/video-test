@@ -6,6 +6,7 @@ const title = document.getElementById("epTitle");
 const fullscreenButton = document.getElementById("fullscreen");
 const seekSlide = document.getElementById("seek")
 let videoPlaying = false;
+let seeking = false;
 let currentIndex = 0;
 const availableEpisodes = [
   {title: "Episode 01", file: "ep01.mp4"},
@@ -98,17 +99,22 @@ fullscreenButton.addEventListener("click", () => {
   video.requestFullscreen();
 });
 
+seekSlide.addEventListener("input", () => {
+  seeking = true;
+
+  if (Number.isFinite(video.duration) && video.duration > 0) {
+    video.currentTime = video.duration * (seekSlide.value / 100);
+  }
+});
+
 seekSlide.addEventListener("change", () => {
-  if (!isNaN(video.duration)) {
-    let seekTime = video.duration * (seekSlide.value / 100);
-    video.currentTime = seekTime
-  };
+  seeking = false;
 });
 
 video.addEventListener("timeupdate", () => {
-  if (!isNaN(video.duration)) {
+  if (!seeking && Number.isFinite(video.duration) && video.duration > 0) {
     seekSlide.value = (video.currentTime / video.duration) * 100;
-  };
+  }
 });
 
 loadVideo(0)
