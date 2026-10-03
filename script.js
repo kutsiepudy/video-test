@@ -1,12 +1,11 @@
-const video = document.getElementById("screen")
+const video = document.getElementById("screen");
 const playPause = document.getElementById("play-pause");
 const next = document.getElementById("nextEP");
 const prev = document.getElementById("prevEP");
 const title = document.getElementById("epTitle");
 const fullscreenButton = document.getElementById("fullscreen");
-const seekSlide = document.getElementById("seek")
+const seekSlide = document.getElementById("seek");
 let videoPlaying = false;
-let seeking = false;
 let currentIndex = 0;
 const availableEpisodes = [
   {title: "Episode 01", file: "ep01.mp4"},
@@ -38,83 +37,81 @@ const availableEpisodes = [
 ];
 
 playPause.addEventListener("click", () => {
-  videoPlaying = !videoPlaying;
-  
-  if (videoPlaying) {
+  if (video.paused) {
     video.play();
     playPause.textContent = "❚❚";
+    videoPlaying = true;
   } else {
     video.pause();
     playPause.textContent = "▶︎";
+    videoPlaying = false;
   }
 });
 
 function loadVideo(index) {
-  let episode = availableEpisodes[index]
-  video.src = `videos/${episode.file}`
-  video.load()
-  title.textContent = episode.title
+  const episode = availableEpisodes[index];
+
+  video.src = `videos/${episode.file}`;
+  video.load();
+  title.textContent = episode.title;
+  seekSlide.value = 0;
 }
 
 next.addEventListener("click", () => {
   currentIndex++;
-  
+
   if (currentIndex >= availableEpisodes.length) {
     currentIndex = 0;
   }
-  
+
   loadVideo(currentIndex);
   video.play();
   videoPlaying = true;
-  playPause.textContent = "❚❚"
+  playPause.textContent = "❚❚";
 });
 
 prev.addEventListener("click", () => {
   currentIndex--;
-  
+
   if (currentIndex < 0) {
     currentIndex = availableEpisodes.length - 1;
   }
-  
-  loadVideo(currentIndex)
+
+  loadVideo(currentIndex);
   video.play();
   videoPlaying = true;
-  playPause.textContent = "❚❚"
+  playPause.textContent = "❚❚";
 });
 
 video.addEventListener("ended", () => {
   currentIndex++;
-  
+
   if (currentIndex >= availableEpisodes.length) {
     currentIndex = 0;
   }
-  
+
   loadVideo(currentIndex);
   video.play();
   videoPlaying = true;
-  playPause.textContent = "❚❚"
+  playPause.textContent = "❚❚";
 });
 
 fullscreenButton.addEventListener("click", () => {
   video.requestFullscreen();
 });
 
-seekSlide.addEventListener("input", () => {
-  seeking = true;
-
-  if (Number.isFinite(video.duration) && video.duration > 0) {
-    video.currentTime = video.duration * (seekSlide.value / 100);
-  }
-});
-
-seekSlide.addEventListener("change", () => {
-  seeking = false;
+video.addEventListener("loadedmetadata", () => {
+  seekSlide.min = 0;
+  seekSlide.max = video.duration;
+  seekSlide.value = 0;
 });
 
 video.addEventListener("timeupdate", () => {
-  if (!seeking && Number.isFinite(video.duration) && video.duration > 0) {
-    seekSlide.value = (video.currentTime / video.duration) * 100;
-  }
+  seekSlide.value = video.currentTime;
 });
 
-loadVideo(0)
+seekSlide.addEventListener("input", () => {
+  video.currentTime = seekSlide.value;
+});
+
+loadVideo(0);
