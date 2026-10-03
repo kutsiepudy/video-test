@@ -117,7 +117,7 @@ prev.addEventListener("click", () => {
   playPause.textContent = "❚❚";
 });
 
-video.addEventListener("ended", () => {
+/* video.addEventListener("ended", () => {
   currentIndex++;
 
   if (currentIndex >= availableEpisodes.length) {
@@ -129,7 +129,7 @@ video.addEventListener("ended", () => {
 
   videoPlaying = true;
   playPause.textContent = "❚❚";
-});
+}); */
 
 fullscreenButton.addEventListener("click", () => {
   if (document.fullscreenElement) {
