@@ -9,7 +9,7 @@
 
 <body>
   <div class="display">
-    <video id="screen" width="640" height="360" controls>
+    <video id="screen" width="640" height="360">
       Your browser does not support the video tag.
     </video>
   <h1 id="epTitle"></h1>
@@ -20,9 +20,18 @@
     <button id="play-pause" aria-label="Play or pause">▶︎</button>
     <button id="nextEP">⏭</button>
     <button id="fullscreen">🗖</button>
-    <input type="range" class="seek_slider" id="seek">
-    <p id="timeDisplay">00:00 / 00:00</p>
   </div>
+
+  <div class="timestamp-controls">
+  <input
+    type="text"
+    id="timestamp"
+    placeholder="00:00"
+    aria-label="Jump to timestamp"
+  >
+  <button id="jump">GO</button>
+  <p id="timeDisplay">00:00 / 00:00</p>
+</div>
   <script src="script.js"></script>
 </body>
 </html>
