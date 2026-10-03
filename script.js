@@ -110,7 +110,7 @@ video.addEventListener("timeupdate", () => {
   seekSlide.value = video.currentTime;
 });
 
-seekSlide.addEventListener("input", () => {
+seekSlide.addEventListener("change", () => {
   video.currentTime = seekSlide.value;
 });
 
