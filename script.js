@@ -150,16 +150,12 @@ video.addEventListener("timeupdate", () => {
 
 seekSlide.addEventListener("input", () => {
   const newTime = Number(seekSlide.value);
-  const wasPlaying = !video.paused;
 
   if (Number.isFinite(newTime)) {
     video.currentTime = newTime;
   }
 
-  if (wasPlaying) {
-    video.play();
-  }
-
   updateTimeDisplay();
 });
+
 loadVideo(0);
