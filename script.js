@@ -81,11 +81,24 @@ prev.addEventListener("click", () => {
   playPause.textContent = "❚❚"
 });
 
+video.addEventListener("ended", () => {
+  currentIndex++;
+  
+  if (currentIndex >= availableEpisodes.length) {
+    currentIndex = 0;
+  }
+  
+  loadVideo(currentIndex);
+  video.play();
+  videoPlaying = true;
+  playPause.textContent = "❚❚"
+});
+
 fullscreenButton.addEventListener("click", () => {
   video.requestFullscreen();
 });
 
-seekSlide.addEventListener("input", () => {
+seekSlide.addEventListener("change", () => {
   if (!isNaN(video.duration)) {
     let seekTime = video.duration * (seekSlide.value / 100);
     video.currentTime = seekTime
