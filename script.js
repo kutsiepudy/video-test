@@ -116,6 +116,7 @@ video.addEventListener("ended", () => {
   if (currentIndex >= availableEpisodes.length) {
     currentIndex = 0;
   }
+});
 
   loadVideo(currentIndex);
   video.play();
