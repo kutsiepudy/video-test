@@ -4,177 +4,189 @@ const next = document.getElementById("nextEP");
 const prev = document.getElementById("prevEP");
 const title = document.getElementById("epTitle");
 const fullscreenButton = document.getElementById("fullscreen");
-const seekSlide = document.getElementById("seek");
+
+const timestampInput = document.getElementById("timestamp");
+const jumpButton = document.getElementById("jump");
 const timeDisplay = document.getElementById("timeDisplay");
-let isSeeking = false;
-let videoPlaying = false;
-let currentIndex = 0;
 
 const availableEpisodes = [
-  { title: "Episode 01", file: "ep01.mp4" },
-  { title: "Episode 02", file: "ep02.mp4" },
-  { title: "Episode 03", file: "ep03.mp4" },
-  { title: "Episode 04", file: "ep04.mp4" },
-  { title: "Episode 05", file: "ep05.mp4" },
-  { title: "Episode 06", file: "ep06.mp4" },
-  { title: "Episode 07", file: "ep07.mp4" },
-  { title: "Episode 08", file: "ep08.mp4" },
-  { title: "Episode 09", file: "ep09.mp4" },
-  { title: "Episode 10", file: "ep10.mp4" },
-  { title: "Episode 11", file: "ep11.mp4" },
-  { title: "Episode 12", file: "ep12.mp4" },
-  { title: "Episode 13", file: "ep13.mp4" },
-  { title: "Episode 14", file: "ep14.mp4" },
-  { title: "Episode 15", file: "ep15.mp4" },
-  { title: "Episode 16", file: "ep16.mp4" },
-  { title: "Episode 17", file: "ep17.mp4" },
-  { title: "Episode 18", file: "ep18.mp4" },
-  { title: "Episode 19", file: "ep19.mp4" },
-  { title: "Episode 20", file: "ep20.mp4" },
-  { title: "Episode 21", file: "ep21.mp4" },
-  { title: "Episode 22", file: "ep22.mp4" },
-  { title: "Episode 23", file: "ep23.mp4" },
-  { title: "Episode 24", file: "ep24.mp4" },
-  { title: "Episode 25", file: "ep25.mp4" },
-  { title: "Episode 26", file: "ep26.mp4" }
+    { title: "Episode 1", file: "ep01.mp4" },
+    { title: "Episode 2", file: "ep02.mp4" },
+    { title: "Episode 3", file: "ep03.mp4" },
+    { title: "Episode 4", file: "ep04.mp4" },
+    { title: "Episode 5", file: "ep05.mp4" },
+    { title: "Episode 6", file: "ep06.mp4" },
+    { title: "Episode 7", file: "ep07.mp4" },
+    { title: "Episode 8", file: "ep08.mp4" },
+    { title: "Episode 9", file: "ep09.mp4" },
+    { title: "Episode 10", file: "ep10.mp4" },
+    { title: "Episode 11", file: "ep11.mp4" },
+    { title: "Episode 12", file: "ep12.mp4" },
+    { title: "Episode 13", file: "ep13.mp4" },
+    { title: "Episode 14", file: "ep14.mp4" },
+    { title: "Episode 15", file: "ep15.mp4" },
+    { title: "Episode 16", file: "ep16.mp4" },
+    { title: "Episode 17", file: "ep17.mp4" },
+    { title: "Episode 18", file: "ep18.mp4" },
+    { title: "Episode 19", file: "ep19.mp4" },
+    { title: "Episode 20", file: "ep20.mp4" },
+    { title: "Episode 21", file: "ep21.mp4" },
+    { title: "Episode 22", file: "ep22.mp4" },
+    { title: "Episode 23", file: "ep23.mp4" },
+    { title: "Episode 24", file: "ep24.mp4" },
+    { title: "Episode 25", file: "ep25.mp4" },
+    { title: "Episode 26", file: "ep26.mp4" }
 ];
 
-function formatTime(totalSeconds) {
-  if (!Number.isFinite(totalSeconds) || totalSeconds < 0) {
-    return "00:00";
-  }
-
-  const wholeSeconds = Math.floor(totalSeconds);
-  const hours = Math.floor(wholeSeconds / 3600);
-  const minutes = Math.floor((wholeSeconds % 3600) / 60);
-  const seconds = wholeSeconds % 60;
-
-  if (hours > 0) {
-    return `${hours}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
-  }
-
-  return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
-}
-
-function updateTimeDisplay() {
-  const currentTime = Number.isFinite(video.currentTime) ? video.currentTime : 0;
-  const duration = Number.isFinite(video.duration) && video.duration > 0
-    ? video.duration
-    : 0;
-
-  timeDisplay.textContent = `${formatTime(currentTime)} / ${formatTime(duration)}`;
-}
+let currentEpisode = 0;
 
 function loadVideo(index) {
-  const episode = availableEpisodes[index];
+    if (index < 0 || index >= availableEpisodes.length) {
+        return;
+    }
 
-  video.src = `videos/${episode.file}`;
-  video.load();
+    currentEpisode = index;
 
-  title.textContent = episode.title;
-  seekSlide.value = 0;
+    const episode = availableEpisodes[currentEpisode];
 
-  updateTimeDisplay();
+    video.src = `videos/${episode.file}`;
+    video.load();
+
+    title.textContent = episode.title;
+    timeDisplay.textContent = "00:00 / 00:00";
+    timestampInput.value = "";
+    playPause.textContent = "▶︎";
 }
 
 playPause.addEventListener("click", () => {
-  if (video.paused) {
-    video.play();
-    playPause.textContent = "❚❚";
-    videoPlaying = true;
-  } else {
-    video.pause();
+    if (video.paused) {
+        video.play();
+        playPause.textContent = "⏸";
+    } else {
+        video.pause();
+        playPause.textContent = "▶︎";
+    }
+});
+
+video.addEventListener("play", () => {
+    playPause.textContent = "⏸";
+});
+
+video.addEventListener("pause", () => {
     playPause.textContent = "▶︎";
-    videoPlaying = false;
-  }
 });
 
 next.addEventListener("click", () => {
-  currentIndex++;
-
-  if (currentIndex >= availableEpisodes.length) {
-    currentIndex = 0;
-  }
-
-  loadVideo(currentIndex);
-  video.play();
-
-  videoPlaying = true;
-  playPause.textContent = "❚❚";
+    if (currentEpisode < availableEpisodes.length - 1) {
+        loadVideo(currentEpisode + 1);
+    }
 });
 
 prev.addEventListener("click", () => {
-  currentIndex--;
-
-  if (currentIndex < 0) {
-    currentIndex = availableEpisodes.length - 1;
-  }
-
-  loadVideo(currentIndex);
-  video.play();
-
-  videoPlaying = true;
-  playPause.textContent = "❚❚";
+    if (currentEpisode > 0) {
+        loadVideo(currentEpisode - 1);
+    }
 });
 
 video.addEventListener("ended", () => {
-  currentIndex++;
-
-  if (currentIndex >= availableEpisodes.length) {
-    currentIndex = 0;
-  }
-
-  loadVideo(currentIndex);
-  video.play();
-
-  videoPlaying = true;
-  playPause.textContent = "❚❚";
+    if (currentEpisode < availableEpisodes.length - 1) {
+        loadVideo(currentEpisode + 1);
+        video.play();
+    }
 });
 
 fullscreenButton.addEventListener("click", () => {
-  if (document.fullscreenElement) {
-    document.exitFullscreen();
-    return;
-  }
+    if (video.requestFullscreen) {
+        video.requestFullscreen();
+    } else if (video.webkitRequestFullscreen) {
+        video.webkitRequestFullscreen();
+    } else if (video.msRequestFullscreen) {
+        video.msRequestFullscreen();
+    }
+});
 
-  if (video.requestFullscreen) {
-    video.requestFullscreen();
-  }
+function formatTime(seconds) {
+    if (!Number.isFinite(seconds)) {
+        return "00:00";
+    }
+
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = Math.floor(seconds % 60);
+
+    if (hours > 0) {
+        return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+    }
+
+    return `${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+}
+
+video.addEventListener("timeupdate", () => {
+    timeDisplay.textContent =
+        `${formatTime(video.currentTime)} / ${formatTime(video.duration)}`;
 });
 
 video.addEventListener("loadedmetadata", () => {
-  seekSlide.min = 0;
-  seekSlide.max = video.duration;
-  seekSlide.value = 0;
-
-  updateTimeDisplay();
+    timeDisplay.textContent =
+        `00:00 / ${formatTime(video.duration)}`;
 });
 
-video.addEventListener("timeupdate", () => {
-  if (!isSeeking) {
-    seekSlide.value = video.currentTime;
-  }
+function jumpToTimestamp() {
+    const input = timestampInput.value.trim();
 
-  updateTimeDisplay();
-});
+    if (!input) {
+        return;
+    }
 
-seekSlide.addEventListener("pointerdown", () => {
-  isSeeking = true;
-});
+    const parts = input.split(":").map(Number);
 
-seekSlide.addEventListener("input", () => {
-  const newTime = Number(seekSlide.value);
+    let seconds;
 
-  if (Number.isFinite(newTime)) {
-    video.currentTime = newTime;
-  }
+    if (parts.length === 2) {
+        const minutes = parts[0];
+        const secs = parts[1];
 
-  updateTimeDisplay();
-});
+        if (!Number.isFinite(minutes) || !Number.isFinite(secs)) {
+            return;
+        }
 
-seekSlide.addEventListener("pointerup", () => {
-  isSeeking = false;
-  seekSlide.value = video.currentTime;
+        seconds = minutes * 60 + secs;
+    } else if (parts.length === 3) {
+        const hours = parts[0];
+        const minutes = parts[1];
+        const secs = parts[2];
+
+        if (
+            !Number.isFinite(hours) ||
+            !Number.isFinite(minutes) ||
+            !Number.isFinite(secs)
+        ) {
+            return;
+        }
+
+        seconds = hours * 3600 + minutes * 60 + secs;
+    } else {
+        return;
+    }
+
+    if (
+        seconds < 0 ||
+        seconds > video.duration ||
+        !Number.isFinite(video.duration)
+    ) {
+        return;
+    }
+
+    video.currentTime = seconds;
+    timestampInput.value = "";
+}
+
+jumpButton.addEventListener("click", jumpToTimestamp);
+
+timestampInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+        jumpToTimestamp();
+    }
 });
 
 loadVideo(0);
