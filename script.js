@@ -142,7 +142,7 @@ fullscreenButton.addEventListener("click", () => {
   }
 });
 
-/* video.addEventListener("loadedmetadata", () => {
+video.addEventListener("loadedmetadata", () => {
   seekSlide.min = 0;
   seekSlide.max = video.duration;
   seekSlide.value = 0;
@@ -175,6 +175,6 @@ seekSlide.addEventListener("input", () => {
 seekSlide.addEventListener("pointerup", () => {
   isSeeking = false;
   seekSlide.value = video.currentTime;
-}); */
+});
 
 loadVideo(0);
