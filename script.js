@@ -11,32 +11,32 @@ let videoPlaying = false;
 let currentIndex = 0;
 
 const availableEpisodes = [
-  {title: "Episode 01", file: "ep01.mp4"},
-  {title: "Episode 02", file: "ep02.mp4"},
-  {title: "Episode 03", file: "ep03.mp4"},
-  {title: "Episode 04", file: "ep04.mp4"},
-  {title: "Episode 05", file: "ep05.mp4"},
-  {title: "Episode 06", file: "ep06.mp4"},
-  {title: "Episode 07", file: "ep07.mp4"},
-  {title: "Episode 08", file: "ep08.mp4"},
-  {title: "Episode 09", file: "ep09.mp4"},
-  {title: "Episode 10", file: "ep10.mp4"},
-  {title: "Episode 11", file: "ep11.mp4"},
-  {title: "Episode 12", file: "ep12.mp4"},
-  {title: "Episode 13", file: "ep13.mp4"},
-  {title: "Episode 14", file: "ep14.mp4"},
-  {title: "Episode 15", file: "ep15.mp4"},
-  {title: "Episode 16", file: "ep16.mp4"},
-  {title: "Episode 17", file: "ep17.mp4"},
-  {title: "Episode 18", file: "ep18.mp4"},
-  {title: "Episode 19", file: "ep19.mp4"},
-  {title: "Episode 20", file: "ep20.mp4"},
-  {title: "Episode 21", file: "ep21.mp4"},
-  {title: "Episode 22", file: "ep22.mp4"},
-  {title: "Episode 23", file: "ep23.mp4"},
-  {title: "Episode 24", file: "ep24.mp4"},
-  {title: "Episode 25", file: "ep25.mp4"},
-  {title: "Episode 26", file: "ep26.mp4"},
+  { title: "Episode 01", file: "ep01.mp4" },
+  { title: "Episode 02", file: "ep02.mp4" },
+  { title: "Episode 03", file: "ep03.mp4" },
+  { title: "Episode 04", file: "ep04.mp4" },
+  { title: "Episode 05", file: "ep05.mp4" },
+  { title: "Episode 06", file: "ep06.mp4" },
+  { title: "Episode 07", file: "ep07.mp4" },
+  { title: "Episode 08", file: "ep08.mp4" },
+  { title: "Episode 09", file: "ep09.mp4" },
+  { title: "Episode 10", file: "ep10.mp4" },
+  { title: "Episode 11", file: "ep11.mp4" },
+  { title: "Episode 12", file: "ep12.mp4" },
+  { title: "Episode 13", file: "ep13.mp4" },
+  { title: "Episode 14", file: "ep14.mp4" },
+  { title: "Episode 15", file: "ep15.mp4" },
+  { title: "Episode 16", file: "ep16.mp4" },
+  { title: "Episode 17", file: "ep17.mp4" },
+  { title: "Episode 18", file: "ep18.mp4" },
+  { title: "Episode 19", file: "ep19.mp4" },
+  { title: "Episode 20", file: "ep20.mp4" },
+  { title: "Episode 21", file: "ep21.mp4" },
+  { title: "Episode 22", file: "ep22.mp4" },
+  { title: "Episode 23", file: "ep23.mp4" },
+  { title: "Episode 24", file: "ep24.mp4" },
+  { title: "Episode 25", file: "ep25.mp4" },
+  { title: "Episode 26", file: "ep26.mp4" }
 ];
 
 function formatTime(totalSeconds) {
@@ -58,8 +58,23 @@ function formatTime(totalSeconds) {
 
 function updateTimeDisplay() {
   const currentTime = Number.isFinite(video.currentTime) ? video.currentTime : 0;
-  const duration = Number.isFinite(video.duration) && video.duration > 0 ? video.duration : 0;
+  const duration = Number.isFinite(video.duration) && video.duration > 0
+    ? video.duration
+    : 0;
+
   timeDisplay.textContent = `${formatTime(currentTime)} / ${formatTime(duration)}`;
+}
+
+function loadVideo(index) {
+  const episode = availableEpisodes[index];
+
+  video.src = `videos/${episode.file}`;
+  video.load();
+
+  title.textContent = episode.title;
+  seekSlide.value = 0;
+
+  updateTimeDisplay();
 }
 
 playPause.addEventListener("click", () => {
@@ -74,16 +89,6 @@ playPause.addEventListener("click", () => {
   }
 });
 
-function loadVideo(index) {
-  const episode = availableEpisodes[index];
-
-  video.src = `videos/${episode.file}`;
-  video.load();
-  title.textContent = episode.title;
-  seekSlide.value = 0;
-  updateTimeDisplay();
-}
-
 next.addEventListener("click", () => {
   currentIndex++;
 
@@ -93,6 +98,7 @@ next.addEventListener("click", () => {
 
   loadVideo(currentIndex);
   video.play();
+
   videoPlaying = true;
   playPause.textContent = "❚❚";
 });
@@ -106,6 +112,7 @@ prev.addEventListener("click", () => {
 
   loadVideo(currentIndex);
   video.play();
+
   videoPlaying = true;
   playPause.textContent = "❚❚";
 });
@@ -116,10 +123,10 @@ video.addEventListener("ended", () => {
   if (currentIndex >= availableEpisodes.length) {
     currentIndex = 0;
   }
-});
 
   loadVideo(currentIndex);
   video.play();
+
   videoPlaying = true;
   playPause.textContent = "❚❚";
 });
@@ -139,6 +146,7 @@ video.addEventListener("loadedmetadata", () => {
   seekSlide.min = 0;
   seekSlide.max = Number.isFinite(video.duration) ? video.duration : 0;
   seekSlide.value = 0;
+
   updateTimeDisplay();
 });
 
@@ -146,6 +154,7 @@ video.addEventListener("timeupdate", () => {
   if (Number.isFinite(video.duration) && video.duration > 0) {
     seekSlide.value = video.currentTime;
   }
+
   updateTimeDisplay();
 });
 
