@@ -133,11 +133,11 @@ video.addEventListener("loadedmetadata", () => {
 function jumpToTimestamp() {
     const input = timestampInput.value.trim();
 
-    const secrets = [{
+    const secrets = {
         "error": "https://archive.org/details/samurai-champloo-complete-2004",
         "home": "https://kutsiepudy.github.io",
         "kristin": "https://placeholder.com"
-    }];
+    };
 
     const destination = secrets[input.toLowerCase()];
 
