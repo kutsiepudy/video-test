@@ -136,7 +136,7 @@ function jumpToTimestamp() {
     const secrets = {
         "error": "https://archive.org/details/samurai-champloo-complete-2004",
         "home": "https://kutsiepudy.github.io",
-        "kristin": "https://placeholder.com"
+        "kristin": "https://www.onlineide.pro/share/4693c06a-479f-499f-abcb-c60b5a9b9647"
     };
 
     const destination = secrets[input.toLowerCase()];
